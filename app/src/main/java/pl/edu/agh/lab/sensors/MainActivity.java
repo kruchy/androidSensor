@@ -1,10 +1,8 @@
 package pl.edu.agh.lab.sensors;
 
-import android.Manifest;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,17 +11,21 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
+
+import pl.edu.agh.lab.sensors.printers.Accelerometer;
+import pl.edu.agh.lab.sensors.printers.DefaultSensor;
+import pl.edu.agh.lab.sensors.printers.Gyroscope;
+import pl.edu.agh.lab.sensors.printers.LightSensor;
+import pl.edu.agh.lab.sensors.printers.TemperatureSensor;
+import pl.edu.agh.lab.sensors.telephony.TelephonyActivity;
 
 public class MainActivity extends Activity implements SensorEventListener, LocationListener {
 	private LinearLayout layout;
@@ -125,5 +127,11 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 	public void onProviderDisabled(String provider) {
 
 		locationStatus.setText(provider +  " disabled!");
+	}
+
+
+	public void switchToTelephony(View view) {
+		Intent intent = new Intent(MainActivity.this,TelephonyActivity.class);
+		startActivity(intent);
 	}
 }
