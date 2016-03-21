@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pl.edu.agh.lab.sensors"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="pl.edu.agh.lab.sensors">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="17" />
 
     <application
         android:allowBackup="true"
@@ -26,7 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MapActivity"/>
     </application>
 
 </manifest>
