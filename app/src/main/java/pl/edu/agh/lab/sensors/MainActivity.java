@@ -1,137 +1,161 @@
 package pl.edu.agh.lab.sensors;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.HashMap;
-
-import pl.edu.agh.lab.sensors.printers.Accelerometer;
-import pl.edu.agh.lab.sensors.printers.DefaultSensor;
-import pl.edu.agh.lab.sensors.printers.Gyroscope;
-import pl.edu.agh.lab.sensors.printers.LightSensor;
-import pl.edu.agh.lab.sensors.printers.TemperatureSensor;
 import pl.edu.agh.lab.sensors.telephony.TelephonyActivity;
 
-public class MainActivity extends Activity implements SensorEventListener, LocationListener {
-	private LinearLayout layout;
-	private SensorManager sensorManager;
-	private Accelerometer accelerometer;
-	private Gyroscope gyroscope;
-	private DefaultSensor defaultSensor;
-	private TextView location;
-	private TextView locationStatus;
-	private HashMap<Integer, TextView> sensorMap = new HashMap<>();
+public class MainActivity extends AppCompatActivity implements LocationListener {
+    private TextView location;
+    private TextView locationStatus;
+    private Toolbar toolbar;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_light_sensor);
-		layout = (LinearLayout) findViewById(R.id.Sensors);
-		layout.getBaseline();
-		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		location = (TextView) findViewById(R.id.location);
-		locationStatus = (TextView) findViewById(R.id.locationStatus);
-
-		TextView textView2;
-		int id = 0;
-		for (Sensor sensor : sensorManager.getSensorList(Sensor.TYPE_ALL)) {
-			sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-			textView2 = new TextView(this);
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-			params.setMargins(0, 10, 0, 10);
-			textView2.setLayoutParams(params);
-			layout.addView(textView2);
-			sensorMap.put(sensor.getType(), textView2);
-			id++;
-		}
-		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-		gyroscope = new Gyroscope();
-		accelerometer = new Accelerometer();
-		LightSensor lightSensor = new LightSensor();
-		TemperatureSensor temperatureSensor = new TemperatureSensor();
-		defaultSensor = new DefaultSensor();
-		gyroscope.setNext(accelerometer);
-		gyroscope.setNext(lightSensor);
-		gyroscope.setNext(temperatureSensor);
-		gyroscope.setNext(defaultSensor);
-		Toast toast = Toast.makeText(getApplicationContext(),"Made " + id + " sensors",Toast.LENGTH_SHORT);
-		toast.show();
-	}
-	@Override
-	protected void onStart() {
-		super.onStart();
-		for (Sensor sensor : sensorManager.getSensorList(Sensor.TYPE_ALL)) {
-			sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-		}
-	}
     @Override
-	protected void onResume() {
-		super.onResume();
-	}
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_icons);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new BluetoothFragment(), "Bluetooth");
+        adapter.addFrag(new SensorFragment(), "Sensors");
+        adapter.addFrag(new TelephonyActivity(), "Telephony");
+        adapter.addFrag(new TelephonyActivity(), "Telephony");
+
+        viewPager.setAdapter(adapter);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_tab_call);
+
+//        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return;
+            }
+        }
+//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+
+//        if (findViewById(R.id.fragment_container) != null) {
+//
+//            if (savedInstanceState != null) {
+//                return;
+//            }
+//
+//            // Create a new Fragment to be placed in the activity layout
+//            BluetoothFragment firstFragment = new BluetoothFragment();
+//
+//            // In case this activity was started with special instructions from an
+//            // Intent, pass the Intent's extras to the fragment as arguments
+//            firstFragment.setArguments(getIntent().getExtras());
+//
+//            // Add the fragment to the 'fragment_container' FrameLayout
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragment_container, firstFragment).commit();
+//        }
+
+    }
+
     @Override
-	protected void onPause() {
-		// unregister listener
-		super.onPause();
-		sensorManager.unregisterListener(this);
-	}
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		
-	}
+    protected void onStart() {
+        super.onStart();
 
-	@Override
-	protected void onStop() {
-		sensorManager.unregisterListener(this);
-		super.onStop();
-	}
-	@Override
-	public void onSensorChanged(SensorEvent event) {
+    }
 
-		gyroscope.onSensorChanged(event,sensorMap.get(event.sensor.getType()));
-
-	}
-
-	@Override
-	public void onLocationChanged(Location location) {
-		this.location.setText(location.getLatitude() + " " + location.getLatitude() );
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		locationStatus.setText(provider +  " status: " +  status);
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-		locationStatus.setText(provider +  " enabled!");
-	}
-
-	@Override
-	public void onProviderDisabled(String provider) {
-
-		locationStatus.setText(provider +  " disabled!");
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
 
-	public void switchToTelephony(View view) {
-		Intent intent = new Intent(MainActivity.this,TelephonyActivity.class);
-		startActivity(intent);
-	}
+
+
+
+
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        this.location.setText(location.getLatitude() + " " + location.getLatitude());
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        locationStatus.setText(provider + " status: " + status);
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        locationStatus.setText(provider + " enabled!");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+        locationStatus.setText(provider + " disabled!");
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
+
 }

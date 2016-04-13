@@ -8,5 +8,6 @@
     <string name="unrecognized">Unrecognized Sensors</string>
     <string name="celsius">&#176;C</string>
     <string name="location">Location</string>
+    <string name="telephonyDetails">Telephony details</string>
 
 </resources>

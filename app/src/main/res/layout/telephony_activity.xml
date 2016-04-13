@@ -7,46 +7,33 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity">
+    tools:context=".TelephonyActivity">
 
+    <Button
+        android:id="@+id/telSensorsButton"
+        android:layout_width="wrap_content"
+        android:onClick="switchToSensors"
+        android:text="Sensors"
+        android:layout_height="wrap_content" />
     <Button
         android:id="@+id/telephonyButton"
         android:layout_width="wrap_content"
-        android:onClick="switchToTelephony"
-        android:text="Show Telephone details"
+        android:onClick="switchToBluetooth"
+        android:text="Bluetooth"
         android:layout_height="wrap_content" />
     <TextView
-        android:id="@+id/locationTitle"
+        android:id="@+id/telephonyTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:text="@string/location" />
-
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" />
-    <TextView
-        android:id="@+id/locationStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" />
-    <TextView
-        android:id="@+id/TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="@string/sensors"
-        android:textColor="#0835C9"
-        android:textSize="15sp" />
+        android:text="@string/telephonyDetails" />
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/Sensors"
+            android:id="@+id/details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
