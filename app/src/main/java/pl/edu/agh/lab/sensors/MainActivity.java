@@ -1,25 +1,20 @@
 package pl.edu.agh.lab.sensors;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import pl.edu.agh.lab.sensors.adapter.ViewPagerAdapter;
+import pl.edu.agh.lab.sensors.bluetooth.BluetoothFragment;
+import pl.edu.agh.lab.sensors.contacts.ContactsFragment;
 import pl.edu.agh.lab.sensors.telephony.TelephonyActivity;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
@@ -44,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         adapter.addFrag(new BluetoothFragment(), "Bluetooth");
         adapter.addFrag(new SensorFragment(), "Sensors");
         adapter.addFrag(new TelephonyActivity(), "Telephony");
-        adapter.addFrag(new TelephonyActivity(), "Telephony");
+        adapter.addFrag(new ContactsFragment(), "Contacts");
 
         viewPager.setAdapter(adapter);
 
@@ -126,35 +121,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public void onProviderDisabled(String provider) {
 
         locationStatus.setText(provider + " disabled!");
-    }
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
     }
 
 

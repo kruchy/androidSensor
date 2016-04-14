@@ -24,22 +24,17 @@ public class TelephonyActivity extends Fragment {
         if (savedInstanceState != null)
             return super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment, container, false);
-        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.Sensors);
+        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.layout);
         TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         TextView textView = getTextView();
-        textView.setText("ALL CELL INFO:");
-        linearLayout.addView(textView);
+        textView.setText("ALL CELL INFO:\n" );
 
-        textView = getTextView();
-        textView.setText(tm.getAllCellInfo().get(0).toString());
-        linearLayout.addView(textView);
+        textView.append(tm.getAllCellInfo().get(0).toString());
 
         for (Method method : tm.getClass().getDeclaredMethods()) {
             if (method.getParameterTypes().length == 0 && method.getName().startsWith("get") && !method.getName().startsWith("getAllCellInfo")) {
                 try {
-                    textView = getTextView();
-                    textView.setText(method.getName() + " : " + String.valueOf(method.invoke(tm)) + " ");
-                    linearLayout.addView(textView);
+                    textView.append(method.getName() + " : " + String.valueOf(method.invoke(tm)) + " \n \n");
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
@@ -47,19 +42,7 @@ public class TelephonyActivity extends Fragment {
                 }
             }
         }
-//        for (Field field: tm.getClass().getFields()) {
-//
-//            TextView textView = getTextView();
-//            field.setAccessible(true);
-//            try {
-//                textView.setText(field.getName() + " " +field.get(tm.getClass()));
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//            linearLayout.addView(textView);
-//
-//        }
-
+                    linearLayout.addView(textView);
         int phoneType = tm.getPhoneType();
         String strphoneType = "";
         switch (phoneType) {

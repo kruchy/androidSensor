@@ -8,8 +8,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,7 @@ import pl.edu.agh.lab.sensors.printers.Gyroscope;
 import pl.edu.agh.lab.sensors.printers.LightSensor;
 import pl.edu.agh.lab.sensors.printers.TemperatureSensor;
 
-public class SensorFragment extends Fragment implements SensorEventListener{
+public class SensorFragment extends Fragment implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Gyroscope gyroscope;
@@ -39,6 +37,7 @@ public class SensorFragment extends Fragment implements SensorEventListener{
         }
         super.onStart();
     }
+
     @Override
     public void onPause() {
         // unregister listener
@@ -65,16 +64,16 @@ public class SensorFragment extends Fragment implements SensorEventListener{
         super.onStop();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         if(savedInstanceState != null)
-            return super.onCreateView(inflater,container,savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment, container, false);
-        LinearLayout layout = (LinearLayout) view.findViewById(R.id.Sensors);
+        {
+            return;
+        }
+        LinearLayout layout = (LinearLayout) getView().findViewById(R.id.layout);
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         TextView textView2;
-        int id = 0;
         for (Sensor sensor : sensorManager.getSensorList(Sensor.TYPE_ALL)) {
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
             textView2 = new TextView(getContext());
@@ -83,7 +82,6 @@ public class SensorFragment extends Fragment implements SensorEventListener{
             textView2.setLayoutParams(params);
             layout.addView(textView2);
             sensorMap.put(sensor.getType(), textView2);
-            id++;
         }
 
         gyroscope = new Gyroscope();
@@ -95,8 +93,12 @@ public class SensorFragment extends Fragment implements SensorEventListener{
         gyroscope.setNext(lightSensor);
         gyroscope.setNext(temperatureSensor);
         gyroscope.setNext(defaultSensor);
-        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Made " + id + " sensors", Toast.LENGTH_SHORT);
-        toast.show();
-        return view;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment, container, false);
+
     }
 }
