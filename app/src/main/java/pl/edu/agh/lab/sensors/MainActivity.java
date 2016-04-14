@@ -47,7 +47,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_tab_call);
-
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_tab_contacts);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_tab_favourite);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_launcher);
 //        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
